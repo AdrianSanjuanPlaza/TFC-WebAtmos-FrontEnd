@@ -106,16 +106,7 @@ function About() {
                 <p className="text-muted">UX/UI</p>
               </div>
             </Col>
-            {/* Puedes añadir más miembros del equipo aquí */}
           </Row>
-        </Container>
-      </section>
-
-      <section className="py-5 bg-light">
-        <Container className="text-center">
-          <h2>¿Listo para trabajar con nosotros?</h2>
-          <p className="lead mb-4">Contáctanos hoy mismo para discutir tu proyecto.</p>
-          <Button variant="primary" size="lg" href="/contact">Contáctanos</Button>
         </Container>
       </section>
     </div>

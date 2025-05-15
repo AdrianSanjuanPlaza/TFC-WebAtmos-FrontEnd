@@ -12,16 +12,27 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
     let res;
     try {
         if (token) {
+            console.log("1")
             const authToken = storage.get('authToken');  // Obtener el token desde el almacenamiento
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + authToken;
+            console.log("2")
         }
-
+        const urlCompleta = import.meta.env.VITE_BASE_URL_BACKEND + url
+        console.log("3")
+        console.log(method)
+        console.log(urlCompleta);
+        console.log(params);
+        
+        
         // Realiza la solicitud
         const response = await axios({
             method: method,
-            url: url,
-            data: params,
+            url: urlCompleta,
+            data: params
         });
+        console.log("4")
+
+        console.log(response)
 
         res = response.data;
         if (method !== 'GET') {
@@ -37,6 +48,15 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
 
     } catch (errors) {
         let desc = '';
+        
+        console.log(url)
+        console.log(errors)        
+
+        if(url && errors.response && errors.response.status === 400){
+            res = { solicitudes: []}
+            return res
+        }
+
         res = errors.response.data;
     
         // Verifica si `errors.response.data.errors` es un array antes de llamar a `.map()`
@@ -55,19 +75,19 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
     return res;
 };
 
-export const confirmation = (name, url, redir) => {
+export const confirmation = (id, url, redir) => {
     return new Promise((resolve) => {
         const alert = Swal.mixin({ buttonStyling: true });
         alert.fire({
-            title: 'Estás seguro de eliminar ' + name + ' ?',
+            title: 'Estás seguro de eliminar esta solicitud?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: '<i class="fa-solid fa-check"></i> Si, eliminar',
             cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                sendRequest('DELETE', {}, url, redir);
-                window.location.reload();
+                sendRequest('DELETE', id, url, redir, true, "");
+                // window.location.reload();
                 resolve(true);  // Devuelve true si el usuario confirma
             } else {
                 resolve(false); // Devuelve false si el usuario cancela

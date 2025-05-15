@@ -60,12 +60,11 @@ function Index() {
                 Creemos en la colaboración estrecha contigo para entender tus necesidades únicas y ofrecerte servicios personalizados que se adapten
                 perfectamente a tus objetivos de negocio. Explora nuestros servicios y descubre cómo podemos ayudarte a destacar en el competitivo mundo online.
               </p>
-              <Button variant="primary" size="lg" as={Link} to="/contacto" className="mt-3">
+              <Button variant="primary" size="lg" as={Link} to="/contratacion" className="mt-3">
                 ¡Hablemos de tu proyecto!
               </Button>
             </Col>
             <Col md={6} className="text-center">
-              {/* Puedes elegir una imagen más representativa de todos los servicios */}
               <img src={webFoto} alt="Servicios Web Integrales" className="img-fluid rounded shadow-sm mt-3" style={{ maxWidth: '300px' }} />
             </Col>
           </Row>
@@ -152,7 +151,7 @@ function Index() {
         <Container className="text-center">
           <h2>¿Listo para empezar?</h2>
           <p className="lead mb-4">Explora nuestros servicios en detalle y contáctanos para discutir tu proyecto.</p>
-          <Button variant="primary" size="lg" as={Link} to="/contacto">Contacta con nosotros</Button>
+          <Button variant="primary" size="lg" as={Link} to="/contratacion">Contacta con nosotros</Button>
         </Container>
       </section>
     </>

@@ -6,7 +6,7 @@ function SearchBox() {
     <>
     <div className='searchBox position-relative d-flex align-items-center'>
         <IoSearch />
-        <input type="text" placeholder='Buscar...'/>
+        <input type="text" placeholder='Buscar...' className='w-100'/>
     </div>
     </>
   )

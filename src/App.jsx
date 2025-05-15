@@ -15,6 +15,8 @@ import Contratacion from './views/Requests/index'
 import About from './views/About'
 import Users from './views/Users/Users'
 import Requests from './views/Requests/Requests'
+import EditRequest from './views/Requests/edit'
+import Administracion from './views/Administracion/index'
 
 export const MyContext = createContext()
 
@@ -49,6 +51,8 @@ function App() {
             <Route path='/contratacion' element={<Contratacion/>}/>
             <Route path='/user' element={<Users/>}/>
             <Route path='/solicitudes' element={<Requests/>}/>
+            <Route path='/solicitudes/:id' element={<EditRequest/>}/>
+            <Route path='/administracion' element={<Administracion/>}/>
           </Route>
         </Routes>
         <Footer/>
