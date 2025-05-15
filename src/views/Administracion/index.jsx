@@ -213,7 +213,7 @@ function AdminRequestsDashboard() {
 
     return (
         <Container className="mt-5">
-            <h2 className="text-center mb-4">Dashboard de Administración de Solicitudes</h2>
+            <h2 className="text-center mb-4">Administración de Solicitudes</h2>
 
             <Row className="mb-4">
                 <Col md={6}>
@@ -314,7 +314,7 @@ function AdminRequestsDashboard() {
                                         </div>
                                     </Card.Body>
                                     <Card.Footer className="text-muted small">
-                                        Creado el: {new Date(request.createdDate).toLocaleDateString()}
+                                        Creado el: {request.createdDate}
                                     </Card.Footer>
                                 </Card>
                             </Col>
