@@ -119,12 +119,12 @@ function Requests() {
                         <small className="text-muted d-block">
                           <FaClock className="me-1" />
                           Fecha de creación:
-                          {new Date(s.createdDate).toLocaleDateString()}
+                          {s.createdDate}
                         </small>
                         <small className="text-muted d-block">
                           <FaClock className="me-1" /> Fecha de última
                           modificación:
-                          {new Date(s.modifiedDate).toLocaleDateString()}
+                          {s.modifiedDate}
                         </small>
                         <small className="text-muted d-block">
                           Estado:
