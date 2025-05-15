@@ -12,27 +12,19 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
     let res;
     try {
         if (token) {
-            console.log("1")
             const authToken = storage.get('authToken');  // Obtener el token desde el almacenamiento
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + authToken;
-            console.log("2")
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + authToken;  // Asegúrate de que el token esté bien formateado
         }
-        const urlCompleta = import.meta.env.VITE_BASE_URL_BACKEND + url
-        console.log("3")
-        console.log(method)
-        console.log(urlCompleta);
-        console.log(params);
-        
-        
+
         // Realiza la solicitud
         const response = await axios({
             method: method,
-            url: urlCompleta,
-            data: params
+            url: url,
+            data: params,
         });
-        console.log("4")
+        
 
-        console.log(response)
+        console.log("Mensaje" ,mensaje);
 
         res = response.data;
         if (method !== 'GET') {
@@ -47,16 +39,16 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
         }, 2000);
 
     } catch (errors) {
+        // Si la URL es la de empresas y ocurre un error, retornamos un objeto con empresas vacías
+        if (
+            url &&
+             errors.response &&
+            errors.response.status === 400
+           ) {
+            res = { empresas: [] };
+            return res;
+          }
         let desc = '';
-        
-        console.log(url)
-        console.log(errors)        
-
-        if(url && errors.response && errors.response.status === 400){
-            res = { solicitudes: []}
-            return res
-        }
-
         res = errors.response.data;
     
         // Verifica si `errors.response.data.errors` es un array antes de llamar a `.map()`
@@ -75,19 +67,19 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
     return res;
 };
 
-export const confirmation = (id, url, redir) => {
+export const confirmation = (name, url, redir) => {
     return new Promise((resolve) => {
         const alert = Swal.mixin({ buttonStyling: true });
         alert.fire({
-            title: 'Estás seguro de eliminar esta solicitud?',
+            title: 'Estás seguro de eliminar la solicitud?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: '<i class="fa-solid fa-check"></i> Si, eliminar',
             cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                sendRequest('DELETE', id, url, redir, true, "");
-                // window.location.reload();
+                sendRequest('DELETE', {}, url, redir);
+                window.location.reload();
                 resolve(true);  // Devuelve true si el usuario confirma
             } else {
                 resolve(false); // Devuelve false si el usuario cancela
@@ -97,4 +89,4 @@ export const confirmation = (id, url, redir) => {
 };
 
 
-export default sendRequest;
+export default show_alerta;

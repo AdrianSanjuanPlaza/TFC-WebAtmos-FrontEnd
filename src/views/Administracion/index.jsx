@@ -354,7 +354,6 @@ function AdminRequestsDashboard() {
                     <Table striped bordered hover responsive>
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
                                 <th>Rol</th>
@@ -364,7 +363,6 @@ function AdminRequestsDashboard() {
                         <tbody>
                             {currentUsers.map(user => (
                                 <tr key={user._id}>
-                                    <td>{user._id}</td>
                                     <td>{user.name}</td>
                                     <td>{user.email}</td>
                                     <td>{user.profile}</td>

@@ -91,7 +91,7 @@ function Requests() {
           <p>Aún no ha realizado ninguna solicitud.</p>
           <p>
             ¿Necesita un presupuesto?
-            <Link to="/" className="text-primary">
+            <Link to="/contratacion" className="text-primary">
               Explore nuestros servicios
             </Link>
             .
@@ -99,7 +99,7 @@ function Requests() {
         </div>
       ) : (
         <>
-          <p className="mb-3 text-center">Aquí puede revisar el estado de sus solicitudes de presupuesto.</p>
+          <p className="mb-3 text-center">Aquí puede revisar el estado de sus solicitudes de presupuesto.<br/> Si su solicitud ha sido aprobada, revise su correo electrónico.</p>
           <Row xs={1} md={2} className="g-4 justify-content-center">
             {solicitudes.map((s) => (
               <Col key={s._id} md={6} lg={4}>
