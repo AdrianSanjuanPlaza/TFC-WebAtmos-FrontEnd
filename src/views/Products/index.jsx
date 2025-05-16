@@ -102,6 +102,7 @@ function Index() {
       <section className='py-5 mt-5'>
         <Container>
         <h2 className="text-center mb-4">Nuestros servicios</h2>
+        <p className='mb-1 text-mute small text-center'>Si el producto no es un servicio directo, se considera el precio por página</p>
         </Container>
       </section>
 
@@ -135,6 +136,7 @@ function Index() {
                   <Link to={`/contratacion?search=${encodeURIComponent(producto.name)}`} className='text-decoration-none text-primary'>
                     <h3 className='card-title mb-2'>{producto.name}</h3>
                     <p className='card-text small'>{producto.description}</p>
+                    <p className='mb-1 text-mute small'>{producto.price}€</p>
                   </Link>
                 </div>
               </div>
