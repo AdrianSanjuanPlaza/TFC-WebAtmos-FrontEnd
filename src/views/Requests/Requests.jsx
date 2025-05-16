@@ -68,9 +68,9 @@ function Requests() {
       setSolicitudes([]);
       setLoading(false);
       Swal.fire({
-        icon: "error",
-        title: "Error al cargar",
-        text: "No se pudieron cargar sus solicitudes.",
+        icon: "info",
+        title: "No existen solicitudes",
+        text: "Usted no ha realizado ninguna solicitud todavía.",
       });
     }
   };

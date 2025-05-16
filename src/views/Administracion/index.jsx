@@ -8,46 +8,44 @@ import { IoSearch } from "react-icons/io5";
 
 // Componente SearchButton separado
 const SearchButton = ({ onClick, className, children }) => {
-  return (
-    <Button
-      variant="outline-secondary"
-      onClick={onClick}
-      className={className}
-    >
-      {children}
-    </Button>
-  );
+    return (
+        <Button
+            variant="outline-secondary"
+            onClick={onClick}
+            className={className}
+        >
+            {children}
+        </Button>
+    );
 };
 
 function SearchBox({ onSearch }) {
-  const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
-  const handleInputChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      onSearch(searchTerm);
-    }
-  };
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            onSearch(searchTerm);
+        }
+    };
 
-  return (
-    <div className='searchBox position-relative d-flex align-items-center'>
-      <IoSearch />
-      <input
-        type="text"
-        placeholder='Buscar...'
-        className='w-100'
-        value={searchTerm}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-      />
-    </div>
-  );
+    return (
+        <div className='searchBox position-relative d-flex align-items-center'>
+            <IoSearch />
+            <input
+                type="text"
+                placeholder='Buscar...'
+                className='w-100'
+                value={searchTerm}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+            />
+        </div>
+    );
 }
-
-
 
 function AdminRequestsDashboard() {
     const [requests, setRequests] = useState([]);
@@ -134,6 +132,34 @@ function AdminRequestsDashboard() {
         }
     };
 
+    const handleDisableUser = async (userId, currentIsActive) => {
+        const newIsActive = !currentIsActive;
+        const action = newIsActive ? 'habilitar' : 'deshabilitar';
+
+        const confirmationResult = await Swal.fire({
+            title: `¿Seguro que deseas ${action} este usuario?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Sí, ${action}`,
+            cancelButtonText: 'No, cancelar',
+        });
+
+        if (confirmationResult.isConfirmed) {
+            try {
+                const res = await sendRequest('PATCH', { isActive: newIsActive }, `/users/toogle/${userId}`, '', true, `Usuario ${action}do`);
+                if (res) {
+                    show_alerta(`Usuario ${action}do correctamente.`, 'success');
+                    fetchInitialData(); // Recargar datos para ver el cambio
+                } else {
+                    show_alerta(res?.error || `Error al ${action} el usuario.`, 'error');
+                }
+            } catch (error) {
+                console.error(`Error al ${action} el usuario:`, error);
+                show_alerta(`Error al ${action} el usuario.`, 'error');
+            }
+        }
+    };
+
     const filteredRequests = requests.filter(request => {
         const serviceMatch = !filterService || request.productId === filterService;
         const userMatch = !filterUser || request.userId === filterUser;
@@ -164,14 +190,10 @@ function AdminRequestsDashboard() {
         setUserSearchTerm(searchTerm);
     };
 
-    const handleSearch = () => {
-        setUserPage(1); // Reset to first page on search
-    };
-
     const filteredUsers = allUsers.filter(user =>
         user.name.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(userSearchTerm.toLowerCase())
-    );
+    ).filter(user => user.profile !== 'ADMIN');
 
     const indexOfLastUser = userPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -191,7 +213,6 @@ function AdminRequestsDashboard() {
         }
         return pageNumbers;
     };
-
 
     if (loading) {
         return (
@@ -367,7 +388,13 @@ function AdminRequestsDashboard() {
                                     <td>{user.email}</td>
                                     <td>{user.profile}</td>
                                     <td>
-                                        <Button variant="danger" size="sm" >Deshabilitar</Button>
+                                        <Button
+                                            variant={user.isActive ? "danger" : "success"}
+                                            size="sm"
+                                            onClick={() => handleDisableUser(user._id, user.isActive)}
+                                        >
+                                            {user.isActive ? "Deshabilitar" : "Habilitar"}
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}
@@ -399,4 +426,3 @@ function AdminRequestsDashboard() {
 }
 
 export default AdminRequestsDashboard;
-

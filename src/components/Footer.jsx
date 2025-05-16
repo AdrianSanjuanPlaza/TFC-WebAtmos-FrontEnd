@@ -17,13 +17,13 @@ function Footer() {
             <ul className="list-unstyled d-flex justify-content-center">
               <li className="ms-3"><a className="link-dark text-decoration-none" href="/terminos">Términos de Servicio</a></li>
               <li className="ms-3"><a className="link-dark text-decoration-none" href="/privacidad">Política de Privacidad</a></li>
-              <li className="ms-3"><a className="link-dark text-decoration-none" href="/contacto">Contacto</a></li>
+              <li className="ms-3"><a className="link-dark text-decoration-none" href="/contratacion">Contacto</a></li>
             </ul>
           </Col>
           <Col md={4} className="text-center text-md-center">
-            <a href="#" className="link-dark ms-3"><FaFacebook/></a>
-            <a href="#" className="link-dark ms-3"><FaSquareXTwitter /></a>
-            <a href="#" className="link-dark ms-3"><FaInstagram /></a>
+            <a href="https://www.facebook.com/?locale=es_ES" className="link-dark ms-3"><FaFacebook/></a>
+            <a href="https://x.com/home?lang=es" className="link-dark ms-3"><FaSquareXTwitter /></a>
+            <a href="https://www.instagram.com" className="link-dark ms-3"><FaInstagram /></a>
           </Col>
         </Row>
       </Container>
