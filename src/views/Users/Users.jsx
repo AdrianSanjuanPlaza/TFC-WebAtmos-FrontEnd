@@ -3,6 +3,8 @@ import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import storage from '../../Storage/storage';
 import { useNavigate } from 'react-router-dom';
 import { sendRequest, show_alerta } from '../../functions';
+import { useContext } from "react"
+import { MyContext } from '../../App';
 
 function Users({ userData, onSave, onCancel }) {
 
@@ -15,6 +17,7 @@ function Users({ userData, onSave, onCancel }) {
   const [phone, setPhone] = useState(authUser.phone || '');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
   const go = useNavigate();  
 
@@ -47,7 +50,7 @@ function Users({ userData, onSave, onCancel }) {
   };
 
   return (
-    <Container className="mt-5 mb-4">
+    <Container className="mt-5 mb-4" style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
       <Row className="justify-content-center align-items-center">
         <Col md={8}>
           <div className='text-center mb-4'>
@@ -55,7 +58,7 @@ function Users({ userData, onSave, onCancel }) {
             <p className="lead">Aquí puedes modificar la información de tu cuenta.</p>
             <p>Revisa los campos y realiza los cambios que necesites.</p>
           </div>
-          <div className='card p-4 shadow bg-light border border-primary rounded'>
+          <div className='card p-4 shadow border border-primary rounded' style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff" } : { backgroundColor: '#f0f5ff', color: "#1d2021" }}>
             {error && <Alert variant="danger">{error}</Alert>}
             {success && <Alert variant="success">{success}</Alert>}
             <Form onSubmit={handleSubmit}>

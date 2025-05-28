@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { sendRequest, show_alerta } from "../../functions";
@@ -6,6 +6,7 @@ import storage from "../../Storage/storage";
 import { FaLightbulb, FaHandshake, FaPencilAlt } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom"; // Importa useParams
 import { useNavigate } from "react-router-dom";
+import { MyContext } from '../../App';
 
 function Index() {
   const [solicitud, setSolicitud] = useState(null); // Cambiado a un solo objeto solicitud
@@ -17,6 +18,7 @@ function Index() {
   const authUser = storage.get("authUser");
   const { id } = useParams(); // Obtiene el id de los parámetros de la URL
   const userId = authUser?._id; // Protección en caso de que authUser sea null
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
     const go = useNavigate();
 
@@ -106,20 +108,13 @@ function Index() {
 
   return (
     <>
-      <Container className="mt-5 mb-5 d-flex justify-content-center align-items-start">
-        <div
-          className="card p-4 bg-light border border-primary rounded shadow"
-          style={{
-            maxWidth: "500px",
-            width: "90%",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        >
+      <Container className="mt-5 mb-5 d-flex justify-content-center align-items-start" >
+        <div className="card p-4 border border-primary rounded shadow" style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff" } : { backgroundColor: '#f0f5ff', color: "#1d2021" }}>
           <h2 className="text-center mb-4">
             {id ? "Edita tu solicitud" : "Nueva Solicitud"}
           </h2>
           {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={sendSolicitud} id="form">
+          <Form onSubmit={sendSolicitud} id="form" >
             <Form.Group className="mb-3" controlId="formPaquete">
               <Form.Label>Servicio Deseado</Form.Label>
               <Form.Control
@@ -135,7 +130,7 @@ function Index() {
                 </option>
 
               </Form.Control>
-              <Form.Text className="text-muted">
+              <Form.Text style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
                 El servicio seleccionado previamente no es editable.
               </Form.Text>
             </Form.Group>
@@ -166,7 +161,7 @@ function Index() {
         </div>
       </Container>
 
-      <section className="py-5">
+      <section className="py-5" style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
         <Container className="text-center" id="how">
           <h2>¿Cómo Funciona?</h2>
           <Row className="mt-4 justify-content-center">

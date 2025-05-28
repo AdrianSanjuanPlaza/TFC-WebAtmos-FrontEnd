@@ -6,10 +6,12 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FaCode, FaWrench, FaRocket, FaChartLine, FaShieldAlt, FaHeadset } from 'react-icons/fa';
 import webFoto from '../../assets/images/web-development.jpg'
+import { useContext } from "react"
+import { MyContext } from '../../App';
 
 function Index() {
   const [productos, setProductos] = useState([]);
-  let contador = 0;
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
   const getProductos = async () => {
     Swal.fire({
@@ -46,7 +48,7 @@ function Index() {
 
   return (
     <>
-      <section className="py-5">
+      <section className="py-5" style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
         <Container>
           <Row className="align-items-center justify-content-center">
             <Col md={6} className="text-center text-md-start">
@@ -71,8 +73,8 @@ function Index() {
         </Container>
       </section>
 
-      <section className="bg-light py-5 mt-5">
-        <Container>
+      <section className="py-5 mt-5" style={isDarkMode? { backgroundColor: '#1d2021' } : { backgroundColor: '#f0f5ff' }}>
+        <Container style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
           <h2 className="text-center mb-4">¿Por qué elegir nuestros servicios?</h2>
           <Row xs={1} md={2} className="g-4">
             <Col className="text-center">
@@ -100,15 +102,15 @@ function Index() {
       </section>
 
       <section className='py-5 mt-5'>
-        <Container>
+        <Container style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
         <h2 className="text-center mb-4">Nuestros servicios</h2>
-        <p className='mb-1 text-mute small text-center'>Si el producto no es un servicio directo, se considera el precio por página</p>
+        <p className='mb-1 small text-center'>Si el producto no es un servicio directo, se considera el precio por página</p>
         </Container>
       </section>
 
       <div className='tablaProductos'>
 
-      <Container className="mt-5">
+      <Container className="mt-5" >
       <Row xs={1} md={2} lg={3} className="g-4 justify-content-center">
         {productos.length === 0 ? (
           <Col xs={12}>
@@ -118,8 +120,8 @@ function Index() {
           </Col>
         ) : productos.length === 1 ? (
 
-          <Col xs={12} md={6} lg={4}>
-            <div className='card h-100 text-center border-primary bg-light shadow-sm'>
+          <Col xs={12} md={6} lg={4} >
+            <div className='card h-100 text-center border-primary shadow-sm' style={isDarkMode? { backgroundColor: '#1d2021' } : { backgroundColor: '#f0f5ff' }}>
               <div className='card-body d-flex flex-column justify-content-center align-items-center p-3'>
                 <Link to={`/contratacion?search=${encodeURIComponent(productos[0].name)}`} className='text-decoration-none text-primary'>
                   <h3 className='card-title mb-2'>{productos[0].name}</h3>
@@ -131,7 +133,7 @@ function Index() {
         ) : (
           productos.map((producto) => (
             <Col key={producto.id} xs={12} md={6} lg={4}>
-              <div className='card h-100 text-center border-primary bg-light shadow-sm'>
+              <div className='card h-100 text-center border-primary shadow-sm' style={isDarkMode? { backgroundColor: '#1d2021' } : { backgroundColor: '#f0f5ff' }}>
                 <div className='card-body d-flex flex-column justify-content-center align-items-center p-3'>
                   <Link to={`/contratacion?search=${encodeURIComponent(producto.name)}`} className='text-decoration-none text-primary'>
                     <h3 className='card-title mb-2'>{producto.name}</h3>
@@ -149,9 +151,9 @@ function Index() {
 
       
 
-      <section className="py-5">
-        <Container className="text-center">
-          <h2>¿Listo para empezar?</h2>
+      <section className="py-5" >
+        <Container className="text-center" style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}} >
+          <h2 >¿Listo para empezar?</h2>
           <p className="lead mb-4">Explora nuestros servicios en detalle y contáctanos para discutir tu proyecto.</p>
           <Button variant="primary" size="lg" as={Link} to="/contratacion">Contacta con nosotros</Button>
         </Container>

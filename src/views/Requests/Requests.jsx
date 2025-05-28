@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import storage from "../../Storage/storage";
 import { Container, Row, Col, Card, Badge, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -6,6 +6,7 @@ import { sendRequest, show_alerta, confirmation } from "../../functions";
 import { Link } from "react-router-dom";
 import { FaFileAlt, FaClock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { MyContext } from '../../App';
 
 function Requests() {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -13,6 +14,7 @@ function Requests() {
   const [id, setId] = useState("");
   const authUser = storage.get("authUser");
   const idUser = authUser?._id;
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
   const go = useNavigate();
 
@@ -23,13 +25,11 @@ function Requests() {
   const deleteSolicitud = async (newId) => {
     setId(newId);
 
-
     try {
-      console.log(`/requests/${newId}`)
       const res = await confirmation(newId, `/requests/${newId}`, "");
-      console.log(res)
       if (res) {
         show_alerta("Información actualizada correctamente", "success");
+        getSolicitudes()
       } else {
         show_alerta(res?.error || "Solicitud denegada.", "error");
       }
@@ -80,7 +80,7 @@ function Requests() {
   }, []);
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5" style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
       <h2 className="text-center mb-4">Panel de Solicitudes</h2>
       {loading ? (
         <div className="text-center">
@@ -104,29 +104,29 @@ function Requests() {
             {solicitudes.map((s) => (
               <Col key={s._id} md={6} lg={4}>
 
-                <Card className="h-100 shadow-sm border-0">
+                <Card className="h-100 shadow-sm border-0" style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff" } : { backgroundColor: '#f0f5ff', color: "#1d2021" }}>
                   <Card.Body className="d-flex flex-column justify-content-between">
                     <div>
                       <Card.Title className="mb-2 d-flex align-items-center">
                         <FaFileAlt className="me-2 text-primary" />{s.productId}
                       </Card.Title>
-                      <Card.Text className="small text-muted">
+                      <Card.Text className="small">
                         {s.description.substring(0, 80)}...
                       </Card.Text>
                     </div>
                     <div className="mt-3 d-flex justify-content-between align-items-center">
                       <div>
-                        <small className="text-muted d-block">
+                        <small className="d-block">
                           <FaClock className="me-1" />
                           Fecha de creación:
                           {s.createdDate}
                         </small>
-                        <small className="text-muted d-block">
+                        <small className="d-block">
                           <FaClock className="me-1" /> Fecha de última
                           modificación:
                           {s.modifiedDate}
                         </small>
-                        <small className="text-muted d-block">
+                        <small className="d-block">
                           Estado:
                           <Badge
                             pill
@@ -152,7 +152,7 @@ function Requests() {
       <hr className="my-5" />
       <div className="text-center">
         <h5>Información Adicional</h5>
-        <p className="text-muted small">
+        <p className="small">
           Esta es su área personalizada donde puede realizar un seguimiento de
           sus solicitudes de presupuesto. Manténgase atento a las
           actualizaciones sobre el estado de sus solicitudes.

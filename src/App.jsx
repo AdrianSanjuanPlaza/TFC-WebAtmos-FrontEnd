@@ -17,46 +17,53 @@ import Users from './views/Users/Users'
 import Requests from './views/Requests/Requests'
 import EditRequest from './views/Requests/edit'
 import Administracion from './views/Administracion/index'
+import ForgotPassword from './views/Users/ResetPWD'
+import ChangePWD from './views/Users/ChangePWD'
 
 export const MyContext = createContext()
 
 function App() {
 
   const [isToggleSidebar, setIsToggleSidebar] = useState(true);
+  const [ isDarkMode, setIsDarkMode] = useState(false)
 
   const values={
     isToggleSidebar,
-    setIsToggleSidebar
+    setIsToggleSidebar,
+    isDarkMode,
+    setIsDarkMode
   }
 
   return (
     <>
     <MyContext.Provider value={values}>
-    <BrowserRouter>
-      <Header/>
-      <div className='main d-flex'>
-        <div className='sidebarWrapper' hidden={isToggleSidebar}>
-        <Nav/>
+      <BrowserRouter>
+        <Header/>
+        <div className='main d-flex'>
+          <div className='sidebarWrapper' hidden={isToggleSidebar}>
+          <Nav/>
+          </div>
         </div>
-      </div>
-      <div className={'content pt-5 d-flex flex-column min-vh-100'}>
-        <Routes>
-          <Route path="/" element={<Index/>} />
-          <Route path='/sobre-nosotros' element={<About/>}/>
-          <Route path='/productos' element={<Productos/> }/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/register' element={<Register/>}/>
-          <Route path='/productos/:id' element={<Products/>}/>
-          <Route element={<ProtectedRoutes/>}>
-            <Route path='/contratacion' element={<Contratacion/>}/>
-            <Route path='/user' element={<Users/>}/>
-            <Route path='/solicitudes' element={<Requests/>}/>
-            <Route path='/solicitudes/:id' element={<EditRequest/>}/>
-            <Route path='/administracion' element={<Administracion/>}/>
-          </Route>
-        </Routes>
-        <Footer/>
-      </div>
+        <div className={'w-100 pt-5 d-flex flex-column min-vh-100'} style={isDarkMode? { background: 'linear-gradient(45deg, #0A1931, #183C5F, #215978)' } : { background: 'linear-gradient(45deg, #ADD8E6, #87CEEB, #6495ED)' }}>
+          <Routes>
+            <Route path="/" element={<Index/>} />
+            <Route path='/sobre-nosotros' element={<About/>}/>
+            <Route path='/productos' element={<Productos/> }/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/register' element={<Register/>}/>
+            <Route path='/productos/:id' element={<Products/>}/>
+            <Route path='/forgotpassword' element={<ForgotPassword/>}/>
+            <Route path='/changepassword/:id' element={<ChangePWD/>}/>
+            <Route element={<ProtectedRoutes/>}>
+              <Route path='/contratacion' element={<Contratacion/>}/>
+              <Route path='/user' element={<Users/>}/>
+              <Route path='/solicitudes' element={<Requests/>}/>
+              <Route path='/solicitudes/:id' element={<EditRequest/>}/>
+              <Route path='/administracion' element={<Administracion/>}/>
+            </Route>
+          </Routes>
+          <Footer/>
+        </div>
       </BrowserRouter>
     </MyContext.Provider>
     </>

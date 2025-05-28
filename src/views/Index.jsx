@@ -7,12 +7,15 @@ import contactImage from '../assets/images/contactImage.png';
 import supportImage from '../assets/images/supportImage.jpg'
 import rendimientoImage from '../assets/images/rendimiento.jpg'
 import index from '../assets/images/index.jpg'
+import { useContext } from "react"
+import { MyContext } from '../App';
 
 function Index() {
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
   
   return (
     <div className="landing-page">
-      <section className="py-5 mt-5">
+      <section className="py-5 mt-5" style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
         <Container>
           <Row className="align-items-center justify-content-center">
             <Col md={6} className="text-center text-md-start">
@@ -38,27 +41,27 @@ function Index() {
         </Container>
       </section>
 
-      <section className="py-5 bg-light">
-        <Container>
+      <section className="py-5" style={isDarkMode? { backgroundColor: '#1d2021' } : { backgroundColor: '#f0f5ff' }}>
+        <Container style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
           <h2 className="text-center mb-4">Nuestros Servicios</h2>
           <Row className="justify-content-center">
             <Col md={4} className="text-center mb-4">
               <div className="d-flex justify-content-center align-items-center mb-3" style={{ height: '240px' }}>
-                <Image src={webDevelopmentImage} alt="Desarrollo Web Icon" style={{ maxWidth: '180px' }} />
+                <Image className='rounded' src={webDevelopmentImage} alt="Desarrollo Web Icon" style={{ maxWidth: '180px' }} />
               </div>
               <h3>Desarrollo Web</h3>
               <p>Creamos sitios web a medida, desde landings atractivas hasta plataformas complejas. Nos enfocamos en la funcionalidad, la experiencia del usuario y el diseño responsive.</p>
             </Col>
             <Col md={4} className="text-center mb-4">
               <div className="d-flex justify-content-center align-items-center mb-3" style={{ height: '240px' }}>
-                <Image src={maintenanceImage} alt="Mantenimiento Web Icon" style={{ maxWidth: '180px' }} />
+                <Image className='rounded' src={maintenanceImage} alt="Mantenimiento Web Icon" style={{ maxWidth: '180px' }} />
               </div>
               <h3>Mantenimiento Web</h3>
               <p>Mantén tu sitio web funcionando sin problemas con nuestros servicios de mantenimiento. Actualizaciones, seguridad, copias de seguridad y soporte técnico para tu tranquilidad.</p>
             </Col>
             <Col md={4} className="text-center mb-4">
               <div className="d-flex justify-content-center align-items-center mb-3" style={{ height: '240px' }}>
-                <Image src={deploymentImage} alt="Despliegue de Aplicaciones Icon" style={{ maxWidth: '180px' }} />
+                <Image className='rounded' src={deploymentImage} alt="Despliegue de Aplicaciones Icon" style={{ maxWidth: '180px' }} />
               </div>
               <h3>Despliegue de Aplicaciones</h3>
               <p>Implementamos tus aplicaciones web de forma segura y eficiente en la infraestructura que mejor se adapte a tus necesidades. Optimizamos el rendimiento y la escalabilidad.</p>
@@ -73,7 +76,7 @@ function Index() {
       </section>
 
       <section className="py-5">
-        <Container>
+        <Container style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
           <h2 className="text-center mb-4">¿Por qué elegir WebAtmos?</h2>
           <Row className="justify-content-center">
             <Col lg={10}>
@@ -129,11 +132,11 @@ function Index() {
         </Container>
       </section>
 
-      <section id="contact-preview" className="py-5 bg-light">
-        <Container>
+      <section id="contact-preview" className="py-5" style={isDarkMode? { backgroundColor: '#1d2021' } : { backgroundColor: '#f0f5ff' }}>
+        <Container style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
           <Row className="align-items-center justify-content-center">
             <Col md={6} className="text-center">
-              <Image src={contactImage} alt="Contacto" className="img-fluid" style={{ maxWidth: '300px' }} />
+              <Image src={contactImage} alt="Contacto" className="img-fluid rounded" style={{ maxWidth: '300px' }} />
             </Col>
             <Col md={6} className="mt-4 mt-md-0 text-center text-md-start">
               <h2 className="mb-4">¿Tienes un proyecto en mente? ¡Hablemos!</h2>

@@ -16,6 +16,8 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + authToken;  // Asegúrate de que el token esté bien formateado
         }
 
+        console.log(url)
+
         // Realiza la solicitud
         const response = await axios({
             method: method,
@@ -49,6 +51,7 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
             return res;
           }
         let desc = '';
+
         res = errors.response.data;
     
         // Verifica si `errors.response.data.errors` es un array antes de llamar a `.map()`
@@ -79,7 +82,6 @@ export const confirmation = (name, url, redir) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 sendRequest('DELETE', {}, url, redir);
-                window.location.reload();
                 resolve(true);  // Devuelve true si el usuario confirma
             } else {
                 resolve(false); // Devuelve false si el usuario cancela

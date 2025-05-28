@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
- import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
- import Swal from 'sweetalert2';
- import { sendRequest, show_alerta } from '../../functions';
- import storage from '../../Storage/storage';
- import { FaLightbulb, FaHandshake, FaPencilAlt, FaCheckCircle, FaClock, FaUsers } from 'react-icons/fa';
- import { Link } from 'react-router-dom';
- import webMaintenanceImage from '../../assets/images/contratacion1.jpg'; // Reemplaza con la URL de la imagen generada
- import webServicesSummary from '../../assets/images/login.jpg'; // Reemplaza con la URL de la imagen generada
+import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import { sendRequest, show_alerta } from '../../functions';
+import storage from '../../Storage/storage';
+import { FaLightbulb, FaHandshake, FaPencilAlt, FaCheckCircle, FaClock, FaUsers } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import webMaintenanceImage from '../../assets/images/contratacion1.jpg'; 
+import webServicesSummary from '../../assets/images/login.jpg'; 
+import { useContext } from "react"
+import { MyContext } from '../../App';
 
  function Index() {
   const [productId, setProductId] = useState('');
@@ -15,6 +17,7 @@ import React, { useEffect, useState } from 'react';
   const [productos, setProductos] = useState([]);
   const [error, setError] = useState('');
   const authUser = storage.get("authUser");
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
   const userId = authUser._id
 
@@ -82,7 +85,7 @@ import React, { useEffect, useState } from 'react';
   return (
    <>
     <section className="py-5">
-     <Container>
+     <Container style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
       <Row className="align-items-center justify-content-center">
        <Col md={6} className="text-center text-md-start">
         <h1>Impulsa tu Éxito Web con Soluciones Personalizadas</h1>
@@ -101,8 +104,8 @@ import React, { useEffect, useState } from 'react';
      </Container>
     </section>
 
-    <section className="bg-light py-5">
-     <Container className="text-center">
+    <section className="py-5"  style={isDarkMode? { backgroundColor: '#1d2021' } : { backgroundColor: '#f0f5ff' }}>
+     <Container className="text-center" style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
       <h2>Beneficios de Contratar Nuestros Servicios</h2>
       <Row className="mt-4 justify-content-center">
        <Col md={4} className="mb-4">
@@ -121,19 +124,40 @@ import React, { useEffect, useState } from 'react';
         <p>Contamos con profesionales cualificados y con experiencia en diversas áreas web.</p>
        </Col>
       </Row>
-      {/* Puedes añadir más beneficios aquí */}
      </Container>
     </section>
 
-    <Container className="mt-5 mb-5 d-flex justify-content-center align-items-start">
-     <div
-      className="card p-4 bg-light border border-primary rounded shadow"
-      style={{
-       maxWidth: '500px',
-       width: '90%',
-       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      }}
-     >
+    <section className="py-5">
+     <Container className="text-center" id='how' style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
+      <h2>¿Cómo Funciona?</h2>
+      <Row className="mt-4 justify-content-center">
+       <Col md={4} className="mb-4">
+        <div className="d-flex align-items-center justify-content-center">
+         <FaLightbulb size={40} className="text-primary me-3" />
+         <h4>Comparte tu Idea</h4>
+        </div>
+        <p className="mt-2">Describe tu proyecto y tus necesidades en el formulario.</p>
+       </Col>
+       <Col md={4} className="mb-4">
+        <div className="d-flex align-items-center justify-content-center">
+         <FaHandshake size={40} className="text-primary me-3" />
+         <h4>Recibe una Propuesta</h4>
+        </div>
+        <p className="mt-2">Te enviaremos una propuesta detallada y un presupuesto personalizado.</p>
+       </Col>
+       <Col md={4} className="mb-4">
+        <div className="d-flex align-items-center justify-content-center">
+         <FaPencilAlt size={40} className="text-primary me-3" />
+         <h4>Creamos tu Web</h4>
+        </div>
+        <p className="mt-2">Una vez aceptada la propuesta, comenzaremos a construir tu visión.</p>
+       </Col>
+      </Row>
+     </Container>
+    </section>
+
+    <Container className="mb-5 d-flex justify-content-center align-items-start" >
+     <div className="card p-4 border border-primary rounded shadow w-90 shadow-sm" style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff", maxWidth: '500px' } : { backgroundColor: '#f0f5ff', color: "#1d2021", maxWidth: '500px' }}>
       <h2 className="text-center mb-4">Detalles de tu Solicitud</h2>
       {error && <Alert variant="danger">{error}</Alert>}
       <Form onSubmit={sendSolicitud} id='form'>
@@ -174,34 +198,7 @@ import React, { useEffect, useState } from 'react';
      </div>
     </Container>
 
-    <section className="py-5">
-     <Container className="text-center" id='how'>
-      <h2>¿Cómo Funciona?</h2>
-      <Row className="mt-4 justify-content-center">
-       <Col md={4} className="mb-4">
-        <div className="d-flex align-items-center justify-content-center">
-         <FaLightbulb size={40} className="text-primary me-3" />
-         <h4>Comparte tu Idea</h4>
-        </div>
-        <p className="mt-2">Describe tu proyecto y tus necesidades en el formulario.</p>
-       </Col>
-       <Col md={4} className="mb-4">
-        <div className="d-flex align-items-center justify-content-center">
-         <FaHandshake size={40} className="text-primary me-3" />
-         <h4>Recibe una Propuesta</h4>
-        </div>
-        <p className="mt-2">Te enviaremos una propuesta detallada y un presupuesto personalizado.</p>
-       </Col>
-       <Col md={4} className="mb-4">
-        <div className="d-flex align-items-center justify-content-center">
-         <FaPencilAlt size={40} className="text-primary me-3" />
-         <h4>Creamos tu Web</h4>
-        </div>
-        <p className="mt-2">Una vez aceptada la propuesta, comenzaremos a construir tu visión.</p>
-       </Col>
-      </Row>
-     </Container>
-    </section>
+    
 
     
    </>

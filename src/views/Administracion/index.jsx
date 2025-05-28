@@ -1,51 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Card, Row, Col, Form, Badge, Button, Pagination, Table } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { sendRequest, show_alerta } from '../../functions';
 import storage from '../../Storage/storage';
 import { FaCheck, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { IoSearch } from "react-icons/io5";
-
-// Componente SearchButton separado
-const SearchButton = ({ onClick, className, children }) => {
-    return (
-        <Button
-            variant="outline-secondary"
-            onClick={onClick}
-            className={className}
-        >
-            {children}
-        </Button>
-    );
-};
-
-function SearchBox({ onSearch }) {
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const handleInputChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            onSearch(searchTerm);
-        }
-    };
-
-    return (
-        <div className='searchBox position-relative d-flex align-items-center'>
-            <IoSearch />
-            <input
-                type="text"
-                placeholder='Buscar...'
-                className='w-100'
-                value={searchTerm}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-            />
-        </div>
-    );
-}
+import SearchBox from '../../components/SearchBox'
+import { MyContext } from '../../App';
 
 function AdminRequestsDashboard() {
     const [requests, setRequests] = useState([]);
@@ -62,6 +22,7 @@ function AdminRequestsDashboard() {
     const [userSearchTerm, setUserSearchTerm] = useState('');
     const [userPage, setUserPage] = useState(1);
     const usersPerPage = 5; // Cantidad de usuarios por página
+    const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
     useEffect(() => {
         fetchInitialData();
@@ -191,7 +152,7 @@ function AdminRequestsDashboard() {
     };
 
     const filteredUsers = allUsers.filter(user =>
-        user.name.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+        user.name?.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(userSearchTerm.toLowerCase())
     ).filter(user => user.profile !== 'ADMIN');
 
@@ -217,7 +178,7 @@ function AdminRequestsDashboard() {
     if (loading) {
         return (
             <Container className="mt-5">
-                <h2 className="text-center mb-4">Dashboard de Administración de Solicitudes</h2>
+                <h2 className="text-center mb-4">Administración de Solicitudes</h2>
                 <div className="text-center">Cargando datos...</div>
             </Container>
         );
@@ -226,14 +187,14 @@ function AdminRequestsDashboard() {
     if (!authUser || authUser.profile !== 'ADMIN') {
         return (
             <Container className="mt-5">
-                <h2 className="text-center mb-4">Dashboard de Administración de Solicitudes</h2>
+                <h2 className="text-center mb-4">Administración</h2>
                 <div className="text-center text-danger">No autorizado para acceder a esta página.</div>
             </Container>
         );
     }
 
     return (
-        <Container className="mt-5">
+        <Container className="mt-5" style={isDarkMode? { color: "#f0f5ff" } : { color: "#1d2021"}}>
             <h2 className="text-center mb-4">Administración de Solicitudes</h2>
 
             <Row className="mb-4">
@@ -280,14 +241,14 @@ function AdminRequestsDashboard() {
                     <Row xs={1} md={3} className="g-4">
                         {currentRequests.map(request => (
                             <Col key={request._id}>
-                                <Card className="shadow-sm h-100">
+                                <Card className="shadow-sm h-100" style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff" } : { backgroundColor: '#f0f5ff', color: "#1d2021"}}>
                                     <Card.Body className="d-flex flex-column justify-content-between">
                                         <div>
                                             <Card.Title className="mb-2">{request._id}</Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted small">
+                                            <Card.Subtitle className="mb-2 small">
                                                 Usuario: {userNames[request.userId] || 'Cargando...'}
                                             </Card.Subtitle>
-                                            <Card.Subtitle className="mb-2 text-muted small">
+                                            <Card.Subtitle className="mb-2 small">
                                                 Servicio ID: {request.productId}
                                             </Card.Subtitle>
                                             <Card.Text className="small">
@@ -363,64 +324,58 @@ function AdminRequestsDashboard() {
                 </>
             )}
 
-            {/* Sección de Administración de Usuarios */}
-            <h2 className="text-center mb-4 mt-5">Administración de Usuarios</h2>
             <Row className="mb-4">
+                <h2 className="text-center mb-4 mt-5">Administración de Usuarios</h2>
                 <Col>
                     <SearchBox onSearch={handleUserSearch} />
                 </Col>
             </Row>
-            <Row>
-                <Col>
-                    <Table striped bordered hover responsive>
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Rol</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentUsers.map(user => (
-                                <tr key={user._id}>
-                                    <td>{user.name}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.profile}</td>
-                                    <td>
-                                        <Button
-                                            variant={user.isActive ? "danger" : "success"}
-                                            size="sm"
-                                            onClick={() => handleDisableUser(user._id, user.isActive)}
-                                        >
-                                            {user.isActive ? "Deshabilitar" : "Habilitar"}
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                    {totalUserPages > 1 && (
-                        <nav className="d-flex justify-content-center mt-4">
-                            <Pagination>
-                                <Pagination.Prev
-                                    onClick={() => setUserPage(Math.max(1, userPage - 1))}
-                                    disabled={userPage === 1}
+            <Row xs={1} md={2} lg={3} className="g-4 mb-4"> {/* Always render as cards */}
+                {currentUsers.map(user => (
+                    <Col key={user._id}>
+                        <Card className="shadow-sm h-100" style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff" } : { backgroundColor: '#f0f5ff', color: "#1d2021"}}>
+                            <Card.Body>
+                                <Card.Title>{user.name || user.email}</Card.Title>
+                                <Card.Subtitle className="mb-2">{user.email}</Card.Subtitle>
+                                <Card.Text>
+                                    Rol: {user.profile} <br />
+                                    Teléfono: {user.phone}<br/>
+                                    Estado: <Badge bg={user.isActive ? 'success' : 'danger'}>
+                                        {user.isActive ? 'Activo' : 'Deshabilitado'}
+                                    </Badge>
+                                </Card.Text>
+                                <Button
+                                    variant={user.isActive ? "danger" : "success"}
+                                    size="sm"
+                                    onClick={() => handleDisableUser(user._id, user.isActive)}
                                 >
-                                    <FaChevronLeft />
-                                </Pagination.Prev>
-                                {renderUserPageNumbers()}
-                                <Pagination.Next
-                                    onClick={() => setUserPage(Math.min(totalUserPages, userPage + 1))}
-                                    disabled={userPage === totalUserPages}
-                                >
-                                    <FaChevronRight />
-                                </Pagination.Next>
-                            </Pagination>
-                        </nav>
-                    )}
-                </Col>
+                                    {user.isActive ? "Deshabilitar" : "Habilitar"}
+                                </Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
             </Row>
+
+            {totalUserPages > 1 && (
+                <nav className="d-flex justify-content-center mt-4">
+                    <Pagination>
+                        <Pagination.Prev
+                            onClick={() => setUserPage(Math.max(1, userPage - 1))}
+                            disabled={userPage === 1}
+                        >
+                            <FaChevronLeft />
+                        </Pagination.Prev>
+                        {renderUserPageNumbers()}
+                        <Pagination.Next
+                            onClick={() => setUserPage(Math.min(totalUserPages, userPage + 1))}
+                            disabled={userPage === totalUserPages}
+                        >
+                            <FaChevronRight />
+                        </Pagination.Next>
+                    </Pagination>
+                </nav>
+            )}
         </Container>
     );
 }

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { sendRequest, show_alerta } from '../functions';
-import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Alert, InputGroup } from 'react-bootstrap';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { MyContext } from '../App';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -13,19 +15,26 @@ const Register = () => {
   const [date, setDate] = useState('');
   const [mal, setMal] = useState(true);
   const [contraMal, setContraMal] = useState(true);
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [dateValid, setDateValid] = useState(true); // New state for date validation
   const go = useNavigate();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
   const register = async (e) => {
     e.preventDefault();
-    if (password === pass2 && contraMal) {
+    // Ensure all validations pass before attempting registration
+    if (password === pass2 && contraMal && dateValid) {
       setMal(true);
       const form = { name, surname: surnames, birthday: date, phone, email, password };
+      setLoading(true);
       const res = await sendRequest('POST', form, '/users', '', false, "Usuario Registrado Correctamente");
+      setLoading(false);
       if (res) {
         go('/login');
-      } else if (res.error) {
+      } else if (res && res.error) {
         setError(res.error);
       }
     } else {
@@ -34,6 +43,9 @@ const Register = () => {
       }
       if (!contraMal) {
         show_alerta("La contraseña no cumple con los requisitos.", "warning");
+      }
+      if (!dateValid) {
+        show_alerta("La fecha de nacimiento no puede ser posterior al día de ayer.", "warning");
       }
     }
   };
@@ -44,9 +56,33 @@ const Register = () => {
     setContraMal(regex.test(e.target.value));
   };
 
+  const validarFechaNacimiento = (e) => {
+    const selectedDate = new Date(e.target.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1)
+    
+    setDate(e.target.value);
+
+    if (selectedDate > yesterday) {
+      setDateValid(false);
+    } else {
+      setDateValid(true);
+    }
+  };
+
+  const togglePassword1Visibility = () => {
+    setShowPassword1(!showPassword1);
+  };
+
+  const togglePassword2Visibility = () => {
+    setShowPassword2(!showPassword2);
+  };
+
   return (
     <Container className="mt-5 mb-5 d-flex justify-content-center align-items-center">
-      <div className="card p-4 shadow bg-light border border-primary rounded z-1" style={{ maxWidth: '500px', width: '90%' }}>
+      <div className="card p-4 shadow border border-primary rounded z-1 w-100" style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff", maxWidth: "400px" } : { backgroundColor: '#f0f5ff', color: "#1d2021", maxWidth: "400px" }}>
         <h2 className="text-center mb-4">Regístrate</h2>
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={register}>
@@ -80,9 +116,12 @@ const Register = () => {
             <Form.Control
               type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={validarFechaNacimiento} // Use the new validation function
               required
             />
+            <Alert variant="danger" className={`mt-2 ${dateValid ? 'd-none' : ''}`}>
+              La fecha de nacimiento no puede ser posterior al día de ayer.
+            </Alert>
           </Form.Group>
 
           {/* -------------------- PHONE -------------------- */}
@@ -114,14 +153,23 @@ const Register = () => {
           {/* -------------------- PASSWORD -------------------- */}
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Contraseña</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Contraseña..."
-              value={password}
-              onChange={validarContrasena}
-              required
-            />
-            <Form.Text className="text-muted">
+            <InputGroup>
+              <Form.Control
+                type={showPassword1 ? "text" : "password"}
+                placeholder="Contraseña..."
+                value={password}
+                onChange={validarContrasena}
+                required
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={togglePassword1Visibility}
+                aria-label={showPassword1 ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                {showPassword1 ? <FaEyeSlash /> : <FaEye />}
+              </Button>
+            </InputGroup>
+            <Form.Text style={isDarkMode ? {color: "#f0f5ff"} : {color: "#1d2021"}}>
               La contraseña debe contener al menos 8 carácteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial (@$!%*?&_.).
             </Form.Text>
             <Alert variant="danger" className={`mt-2 ${contraMal ? 'd-none' : ''}`}>
@@ -132,19 +180,28 @@ const Register = () => {
           {/* -------------------- PASSWORD2 -------------------- */}
           <Form.Group className="mb-3" controlId="formBasicPassword2">
             <Form.Label>Repetir contraseña</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Repetir contraseña..."
-              value={pass2}
-              onChange={(e) => setPass2(e.target.value)}
-              required
-            />
+            <InputGroup>
+              <Form.Control
+                type={showPassword2 ? "text" : "password"}
+                placeholder="Repetir contraseña..."
+                value={pass2}
+                onChange={(e) => setPass2(e.target.value)}
+                required
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={togglePassword2Visibility}
+                aria-label={showPassword2 ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                {showPassword2 ? <FaEyeSlash /> : <FaEye />}
+              </Button>
+            </InputGroup>
             <Alert variant="danger" className={`mt-2 ${mal ? 'd-none' : ''}`}>
               Las contraseñas no coinciden.
             </Alert>
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100" disabled={loading || !contraMal || !mal}>
+          <Button variant="primary" type="submit" className="w-100" disabled={loading || !contraMal || !mal || !dateValid}>
             {loading ? 'Registrando usuario...' : 'Registrarse'}
           </Button>
         </Form>
