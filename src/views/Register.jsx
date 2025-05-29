@@ -13,47 +13,84 @@ const Register = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [date, setDate] = useState('');
-  const [mal, setMal] = useState(true);
-  const [contraMal, setContraMal] = useState(true);
+  const [mal, setMal] = useState(true); // true significa que coinciden (o aún no se ha escrito)
+  const [contraMal, setContraMal] = useState(true); // true significa que cumple requisitos
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [dateValid, setDateValid] = useState(true); // New state for date validation
   const go = useNavigate();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { isDarkMode, setIsDarkMode } = useContext(MyContext)
+  const { isDarkMode, setIsDarkMode } = useContext(MyContext);
+
+  // Función para manejar el cambio en la segunda contraseña
+  const handlePass2Change = (e) => {
+    const value = e.target.value;
+    setPass2(value); // Actualiza el estado de pass2
+
+    // Realiza la comparación inmediatamente
+    // Compara el valor actual de 'password' con el valor recién escrito de 'pass2'
+    setMal(password === value);
+  };
 
   const register = async (e) => {
     e.preventDefault();
-    // Ensure all validations pass before attempting registration
-    if (password === pass2 && contraMal && dateValid) {
-      setMal(true);
+
+    // Re-validar todas las condiciones justo antes de enviar, por si acaso
+    const passwordsMatch = password === pass2;
+    const passwordMeetsRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.])[A-Za-z\d@$!%*?&.]{8,}$/.test(password);
+    
+    // Re-validar la fecha de nacimiento
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const isDateValid = selectedDate <= yesterday;
+
+    setMal(passwordsMatch);
+    setContraMal(passwordMeetsRequirements);
+    setDateValid(isDateValid);
+
+    if (passwordsMatch && passwordMeetsRequirements && isDateValid) {
       const form = { name, surname: surnames, birthday: date, phone, email, password };
       setLoading(true);
-      const res = await sendRequest('POST', form, '/users', '', false, "Usuario Registrado Correctamente");
-      setLoading(false);
-      if (res) {
-        go('/login');
-      } else if (res && res.error) {
-        setError(res.error);
+
+      try {
+        const res = await sendRequest('POST', form, '/users', '', false, "Usuario Registrado Correctamente");
+        setLoading(false);
+        if (res) {
+          go('/login');
+        } else if (res && res.error) {
+          setError(res.error);
+        }
+      } catch (err) {
+        setLoading(false);
+        setError('Error al registrar el usuario. Inténtalo de nuevo.');
+        console.error('Error en el registro:', err);
       }
     } else {
-      if (password !== pass2) {
-        setMal(false);
+      // Mostrar alertas específicas si alguna validación falla
+      if (!passwordsMatch) {
+        show_alerta("Las contraseñas no coinciden.", "warning");
       }
-      if (!contraMal) {
+      if (!passwordMeetsRequirements) {
         show_alerta("La contraseña no cumple con los requisitos.", "warning");
       }
-      if (!dateValid) {
+      if (!isDateValid) {
         show_alerta("La fecha de nacimiento no puede ser posterior al día de ayer.", "warning");
       }
     }
   };
 
   const validarContrasena = (e) => {
-    setPassword(e.target.value);
+    const value = e.target.value;
+    setPassword(value);
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.])[A-Za-z\d@$!%*?&.]{8,}$/;
-    setContraMal(regex.test(e.target.value));
+    setContraMal(regex.test(value));
+
+    // También compara con pass2 cuando la primera contraseña cambia
+    setMal(value === pass2);
   };
 
   const validarFechaNacimiento = (e) => {
@@ -61,15 +98,12 @@ const Register = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1)
-    
+    yesterday.setDate(today.getDate() - 1);
+
     setDate(e.target.value);
 
-    if (selectedDate > yesterday) {
-      setDateValid(false);
-    } else {
-      setDateValid(true);
-    }
+    // Actualiza el estado de validación de la fecha en tiempo real
+    setDateValid(selectedDate <= yesterday);
   };
 
   const togglePassword1Visibility = () => {
@@ -116,7 +150,7 @@ const Register = () => {
             <Form.Control
               type="date"
               value={date}
-              onChange={validarFechaNacimiento} // Use the new validation function
+              onChange={validarFechaNacimiento} // Use the validation function
               required
             />
             <Alert variant="danger" className={`mt-2 ${dateValid ? 'd-none' : ''}`}>
@@ -158,7 +192,7 @@ const Register = () => {
                 type={showPassword1 ? "text" : "password"}
                 placeholder="Contraseña..."
                 value={password}
-                onChange={validarContrasena}
+                onChange={validarContrasena} // Usa la función que valida y compara
                 required
               />
               <Button
@@ -185,7 +219,7 @@ const Register = () => {
                 type={showPassword2 ? "text" : "password"}
                 placeholder="Repetir contraseña..."
                 value={pass2}
-                onChange={(e) => setPass2(e.target.value)}
+                onChange={handlePass2Change} // ¡Aquí está el cambio clave!
                 required
               />
               <Button
@@ -201,7 +235,13 @@ const Register = () => {
             </Alert>
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100" disabled={loading || !contraMal || !mal || !dateValid}>
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-100"
+            disabled={loading || !contraMal || !mal || !dateValid || !name || !surnames || !phone || !email || !date}
+            // Deshabilita el botón si alguna validación falla o si faltan campos requeridos
+          >
             {loading ? 'Registrando usuario...' : 'Registrarse'}
           </Button>
         </Form>
