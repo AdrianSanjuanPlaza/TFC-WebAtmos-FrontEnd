@@ -13,7 +13,7 @@ export const sendRequest = async (method, params, url, redir = '', token = true,
     try {
         if (token) {
             const authToken = storage.get('authToken');  // Obtener el token desde el almacenamiento
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + authToken;  // Asegúrate de que el token esté bien formateado
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + authToken;  
         }
 
         console.log(url)

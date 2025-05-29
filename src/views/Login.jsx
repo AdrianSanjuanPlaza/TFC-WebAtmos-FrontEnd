@@ -14,7 +14,7 @@ function Login() {
     const [contraMal, setContraMal] = useState(true);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
+    const [showPassword, setShowPassword] = useState(false);
     const { isDarkMode, setIsDarkMode } = useContext(MyContext)
 
     const go = useNavigate();
@@ -71,12 +71,10 @@ function Login() {
         setContraMal(regex.test(e.target.value));
     }
 
-    // Toggle password visibility
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
-    // Verifica si el usuario está autenticado
     const authUser = storage.get("authUser");
     const authToken = storage.get("authToken");
 
@@ -144,9 +142,9 @@ function Login() {
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Contraseña</Form.Label>
-                                <InputGroup> {/* Use InputGroup for the input and button */}
+                                <InputGroup> 
                                     <Form.Control
-                                        type={showPassword ? "text" : "password"} // Toggle type based on state
+                                        type={showPassword ? "text" : "password"} 
                                         placeholder="Ingresa tu contraseña"
                                         value={password}
                                         onChange={validarContrasena}
@@ -157,7 +155,7 @@ function Login() {
                                         onClick={togglePasswordVisibility}
                                         aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                                     >
-                                        {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Toggle icon */}
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />} 
                                     </Button>
                                 </InputGroup>
                                 <Form.Text className="text-muted">

@@ -330,7 +330,7 @@ function AdminRequestsDashboard() {
                     <SearchBox onSearch={handleUserSearch} />
                 </Col>
             </Row>
-            <Row xs={1} md={2} lg={3} className="g-4 mb-4"> {/* Always render as cards */}
+            <Row xs={1} md={2} lg={3} className="g-4 mb-4">
                 {currentUsers.map(user => (
                     <Col key={user._id}>
                         <Card className="shadow-sm h-100" style={isDarkMode? { backgroundColor: '#1d2021', color: "#f0f5ff" } : { backgroundColor: '#f0f5ff', color: "#1d2021"}}>

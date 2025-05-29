@@ -1,5 +1,5 @@
-import React, { useState } from 'react'; // Make sure useState is imported if you're using it
-import { InputGroup, FormControl, Button } from 'react-bootstrap'; // Import Bootstrap components
+import React, { useState } from 'react'; 
+import { InputGroup, FormControl, Button } from 'react-bootstrap'; 
 import { IoSearch } from "react-icons/io5";
 
 function SearchBox({ onSearch }) {

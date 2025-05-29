@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { sendRequest, show_alerta } from "../../functions";
 import storage from "../../Storage/storage";
 import { FaLightbulb, FaHandshake, FaPencilAlt } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom"; // Importa useParams
+import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { MyContext } from '../../App';
 
@@ -57,7 +57,7 @@ function Index() {
     }
   };
 
-  const getSolicitud = async () => { // Cambiado el nombre a getSolicitud y ahora obtiene una sola solicitud
+  const getSolicitud = async () => {
     if (!id) {
       console.error("No se proporcionó un ID de solicitud en la URL.");
       setError("No se proporcionó un ID de solicitud.");

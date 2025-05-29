@@ -32,7 +32,6 @@ const Register = () => {
     e.preventDefault();
 
     // Re-validar las contraseñas justo antes de enviar, por si acaso
-    // (Aunque ya se valida en tiempo real, es una buena práctica de seguridad)
     const passwordsMatch = newPassword === pass2;
     const passwordMeetsRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.])[A-Za-z\d@$!%*?&.]{8,}$/.test(newPassword);
 
@@ -126,7 +125,7 @@ const Register = () => {
                 type={showPassword2 ? "text" : "password"}
                 placeholder="Repetir contraseña..."
                 value={pass2}
-                onChange={handlePass2Change} // ¡Aquí está el cambio clave!
+                onChange={handlePass2Change}
                 required
               />
               <Button

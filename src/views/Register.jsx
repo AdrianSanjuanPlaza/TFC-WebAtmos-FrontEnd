@@ -17,7 +17,7 @@ const Register = () => {
   const [contraMal, setContraMal] = useState(true); // true significa que cumple requisitos
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  const [dateValid, setDateValid] = useState(true); // New state for date validation
+  const [dateValid, setDateValid] = useState(true);
   const go = useNavigate();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -150,7 +150,7 @@ const Register = () => {
             <Form.Control
               type="date"
               value={date}
-              onChange={validarFechaNacimiento} // Use the validation function
+              onChange={validarFechaNacimiento}
               required
             />
             <Alert variant="danger" className={`mt-2 ${dateValid ? 'd-none' : ''}`}>
@@ -219,7 +219,7 @@ const Register = () => {
                 type={showPassword2 ? "text" : "password"}
                 placeholder="Repetir contraseña..."
                 value={pass2}
-                onChange={handlePass2Change} // ¡Aquí está el cambio clave!
+                onChange={handlePass2Change}
                 required
               />
               <Button
